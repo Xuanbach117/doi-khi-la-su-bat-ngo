@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kỷ Niệm Của Chúng Mình ✨</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #fff0f3; color: #2b2d42; padding: 20px 10px; }
+    .header { text-align: center; margin-bottom: 30px; }
+    .header h1 { color: #ff4d6d; font-size: 2rem; }
+    
+    /* Timeline Layout */
+    .timeline { max-width: 600px; margin: 0 auto; position: relative; padding-left: 20px; border-left: 3px solid #ffb3c1; }
+    .timeline-item { background: white; border-radius: 12px; padding: 15px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: relative; }
+    .timeline-item::before { content: ''; position: absolute; left: -29px; top: 15px; width: 14px; height: 14px; border-radius: 50%; background: #ff4d6d; border: 2px solid white; }
+    
+    .timeline-item img, .timeline-item video { width: 100%; border-radius: 8px; margin-top: 10px; }
+    .date { font-size: 0.85rem; color: #8d99ae; font-weight: bold; }
+    .title { font-size: 1.2rem; color: #590d22; margin: 5px 0; }
+
+    /* Quiz Styling */
+    .quiz-options { display: flex; gap: 10px; margin-top: 10px; }
+    .btn-quiz { flex: 1; padding: 10px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; background: #edf2f4; }
+    .btn-quiz:hover { background: #8d99ae; color: white; }
+    .result-msg { margin-top: 10px; font-weight: bold; font-size: 0.9rem; }
+
+    /* Surprise Box */
+    .gift-section { text-align: center; margin-top: 30px; }
+    .btn-gift { background: #ff4d6d; color: white; border: none; padding: 12px 24px; font-size: 1rem; border-radius: 25px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 10px rgba(255, 77, 109, 0.4); }
+    .gift-content { display: none; margin-top: 15px; background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>Hành Trình Kỷ Niệm 💖</h1>
+    <p>Dành riêng cho cậu!</p>
+  </div>
+
+  <div class="timeline">
+    <!-- Cột mốc 1: Ảnh/Video -->
+    <div class="timeline-item">
+      <span class="date">Ngày ... Tháng ... Năm ...</span>
+      <h3 class="title">Lần Đầu Gặp Nhau 📸</h3>
+      <p>Nhớ cái ngày này không? Lúc này 2 đứa nhìn ngố kinh khủng!</p>
+      <!-- Thay link ảnh hoặc dán file ảnh cùng thư mục -->
+      <img src="https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=500" alt="Kỷ niệm">
+    </div>
+
+    <!-- Cột mốc 2: Quiz Đúng/Sai -->
+    <div class="timeline-item">
+      <span class="date">Thử thách trí nhớ 🧠</span>
+      <h3 class="title">Lần đầu tụi mình đi ăn cùng nhau là món gì?</h3>
+      <div class="quiz-options">
+        <button class="btn-quiz" onclick="checkQuiz(this, false)">A. Bún bò / Phở</button>
+        <button class="btn-quiz" onclick="checkQuiz(this, true)">B. Trà sữa & Bánh</button>
+      </div>
+      <div class="result-msg"></div>
+    </div>
+
+    <!-- Cột mốc 3: Lời nhắn -->
+    <div class="timeline-item">
+      <span class="date">Hôm nay</span>
+      <h3 class="title">Cảm ơn vì đã luôn đồng hành 🌟</h3>
+      <p>Cảm ơn cậu vì đã luôn là một mảnh ghép tuyệt vời trong khoảng thời gian vừa qua...</p>
+    </div>
+  </div>
+
+  <!-- Phần Bất Ngờ Cuối Cùng -->
+  <div class="gift-section">
+    <button class="btn-gift" onclick="openGift()">Click vào đây để nhận quà bất ngờ 🎁</button>
+    <div class="gift-content" id="gift">
+      <h3>Chúc cậu luôn vui vẻ và hạnh phúc! 🎉</h3>
+      <p style="margin-top: 8px;">Mong là tụi mình sẽ còn tạo thêm thật nhiều kỷ niệm đẹp cùng nhau nữa nhé!</p>
+    </div>
+  </div>
+
+  <script>
+    function checkQuiz(btn, isCorrect) {
+      const container = btn.parentElement.parentElement;
+      const result = container.querySelector('.result-msg');
+      if (isCorrect) {
+        result.innerText = "🎉 Chuẩn luôn! Nhớ dai thế nhờ!";
+        result.style.color = "#2a9d8f";
+      } else {
+        result.innerText = "❌ Sai rồi nha! Nhớ lại xem nào!";
+        result.style.color = "#e76f51";
+      }
+    }
+
+    function openGift() {
+      const gift = document.getElementById('gift');
+      gift.style.display = gift.style.display === 'block' ? 'none' : 'block';
+    }
+  </script>
+</body>
+</html>
