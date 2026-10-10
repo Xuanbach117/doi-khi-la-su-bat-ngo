@@ -6,93 +6,211 @@
   <title>Kỷ Niệm Của Chúng Mình ✨</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #fff0f3; color: #2b2d42; padding: 20px 10px; }
-    .header { text-align: center; margin-bottom: 30px; }
-    .header h1 { color: #ff4d6d; font-size: 2rem; }
-    
-    /* Timeline Layout */
-    .timeline { max-width: 600px; margin: 0 auto; position: relative; padding-left: 20px; border-left: 3px solid #ffb3c1; }
-    .timeline-item { background: white; border-radius: 12px; padding: 15px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: relative; }
-    .timeline-item::before { content: ''; position: absolute; left: -29px; top: 15px; width: 14px; height: 14px; border-radius: 50%; background: #ff4d6d; border: 2px solid white; }
-    
-    .timeline-item img, .timeline-item video { width: 100%; border-radius: 8px; margin-top: 10px; }
-    .date { font-size: 0.85rem; color: #8d99ae; font-weight: bold; }
-    .title { font-size: 1.2rem; color: #590d22; margin: 5px 0; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      color: #333;
+    }
 
-    /* Quiz Styling */
-    .quiz-options { display: flex; gap: 10px; margin-top: 10px; }
-    .btn-quiz { flex: 1; padding: 10px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; background: #edf2f4; }
-    .btn-quiz:hover { background: #8d99ae; color: white; }
-    .result-msg { margin-top: 10px; font-weight: bold; font-size: 0.9rem; }
+    /* Container chứa các slide */
+    .slide-container {
+      width: 90%;
+      max-width: 450px;
+      height: 85vh;
+      max-height: 650px;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      position: relative;
+      overflow: hidden;
+    }
 
-    /* Surprise Box */
-    .gift-section { text-align: center; margin-top: 30px; }
-    .btn-gift { background: #ff4d6d; color: white; border: none; padding: 12px 24px; font-size: 1rem; border-radius: 25px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 10px rgba(255, 77, 109, 0.4); }
-    .gift-content { display: none; margin-top: 15px; background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+    /* Mỗi trang Slide */
+    .slide {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      padding: 25px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.5s ease-in-out;
+      transform: translateX(100%);
+    }
+
+    /* Slide đang hiển thị */
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(0);
+    }
+
+    /* Đã trôi qua */
+    .slide.prev {
+      transform: translateX(-100%);
+    }
+
+    .slide h2 { color: #ff4d6d; margin-bottom: 15px; font-size: 1.5rem; }
+    .slide p { margin-bottom: 15px; font-size: 1rem; line-height: 1.5; color: #555; }
+    
+    .slide img, .slide video {
+      width: 100%;
+      max-height: 250px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    /* Nút bấm chuyển trang */
+    .btn-next {
+      background: #ff4d6d;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      font-size: 1rem;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: bold;
+      box-shadow: 0 4px 10px rgba(255, 77, 109, 0.4);
+      margin-top: 10px;
+      transition: 0.2s;
+    }
+    .btn-next:hover { transform: scale(1.05); }
+
+    /* Các lựa chọn Quiz */
+    .quiz-options {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .btn-quiz {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #ffb3c1;
+      background: #fff;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: bold;
+      color: #333;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .btn-quiz:hover { background: #ffe6ea; }
+
+    /* Thanh tiến trình (Progress Bar) */
+    .progress-bar {
+      position: absolute;
+      top: 0; left: 0;
+      height: 5px;
+      background: #ff4d6d;
+      width: 0%;
+      transition: width 0.4s ease;
+      z-index: 10;
+    }
   </style>
 </head>
 <body>
 
-  <div class="header">
-    <h1>Hành Trình Kỷ Niệm 💖</h1>
-    <p>Dành riêng cho cậu!</p>
-  </div>
+  <div class="slide-container">
+    <div class="progress-bar" id="progress"></div>
 
-  <div class="timeline">
-    <!-- Cột mốc 1: Ảnh/Video -->
-    <div class="timeline-item">
-      <span class="date">Ngày ... Tháng ... Năm ...</span>
-      <h3 class="title">Lần Đầu Gặp Nhau 📸</h3>
-      <p>Nhớ cái ngày này không? Lúc này 2 đứa nhìn ngố kinh khủng!</p>
-      <!-- Thay link ảnh hoặc dán file ảnh cùng thư mục -->
-      <img src="https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=500" alt="Kỷ niệm">
+    <!-- SLIDE 1: Mở đầu -->
+    <div class="slide active">
+      <h2>Chào Cậu! 👋</h2>
+      <p>Bấm vào nút bên dưới để mở hành trình bất ngờ mà tớ chuẩn bị riêng cho cậu nhé!</p>
+      <button class="btn-next" onclick="nextSlide()">Bắt đầu thôi ✨</button>
     </div>
 
-    <!-- Cột mốc 2: Quiz Đúng/Sai -->
-    <div class="timeline-item">
-      <span class="date">Thử thách trí nhớ 🧠</span>
-      <h3 class="title">Lần đầu tụi mình đi ăn cùng nhau là món gì?</h3>
+    <!-- SLIDE 2: Kỷ niệm 1 (Ảnh/Video) -->
+    <div class="slide">
+      <h2>Kỷ Niệm Đầu Tiên 📸</h2>
+      <!-- Thay link ảnh bằng link ảnh của hai bạn -->
+      <img src="https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=500" alt="Kỷ niệm 1">
+      <p>Nhớ cái ngày này không? Lúc này hai đứa mình vẫn còn ngại ngùng lắm!</p>
+      <button class="btn-next" onclick="nextSlide()">Tiếp tục ➔</button>
+    </div>
+
+    <!-- SLIDE 3: Câu hỏi trắc nghiệm 1 -->
+    <div class="slide">
+      <h2>Thử Thách Trí Nhớ! 🧠</h2>
+      <p>Đố cậu biết: Lần đầu tiên tụi mình đi ăn chung là ăn món gì?</p>
       <div class="quiz-options">
-        <button class="btn-quiz" onclick="checkQuiz(this, false)">A. Bún bò / Phở</button>
-        <button class="btn-quiz" onclick="checkQuiz(this, true)">B. Trà sữa & Bánh</button>
+        <button class="btn-quiz" onclick="checkAnswer(false)">A. Bún bò / Phở</button>
+        <button class="btn-quiz" onclick="checkAnswer(true)">B. Trà sữa & Bánh rán</button>
+        <button class="btn-quiz" onclick="checkAnswer(false)">C. Gà rán KFC</button>
       </div>
-      <div class="result-msg"></div>
     </div>
 
-    <!-- Cột mốc 3: Lời nhắn -->
-    <div class="timeline-item">
-      <span class="date">Hôm nay</span>
-      <h3 class="title">Cảm ơn vì đã luôn đồng hành 🌟</h3>
-      <p>Cảm ơn cậu vì đã luôn là một mảnh ghép tuyệt vời trong khoảng thời gian vừa qua...</p>
+    <!-- SLIDE 4: Kỷ niệm 2 -->
+    <div class="slide">
+      <h2>Chuẩn Luôn! 🎉</h2>
+      <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=500" alt="Kỷ niệm 2">
+      <p>Cảm ơn cậu vì đã luôn đồng hành và chịu đựng tính dở hơi của tớ suốt thời gian qua nha!</p>
+      <button class="btn-next" onclick="nextSlide()">Xem điều bất ngờ cuối ➔</button>
     </div>
-  </div>
 
-  <!-- Phần Bất Ngờ Cuối Cùng -->
-  <div class="gift-section">
-    <button class="btn-gift" onclick="openGift()">Click vào đây để nhận quà bất ngờ 🎁</button>
-    <div class="gift-content" id="gift">
-      <h3>Chúc cậu luôn vui vẻ và hạnh phúc! 🎉</h3>
-      <p style="margin-top: 8px;">Mong là tụi mình sẽ còn tạo thêm thật nhiều kỷ niệm đẹp cùng nhau nữa nhé!</p>
+    <!-- SLIDE 5: Lời chúc & Bất ngờ -->
+    <div class="slide">
+      <h2>Gửi Tới Cậu! ❤️</h2>
+      <p style="font-size: 1.1rem; color: #ff4d6d; font-weight: bold;">Chúc cậu luôn tràn ngập niềm vui và hạnh phúc!</p>
+      <p>Mong là chúng mình sẽ còn đi cùng nhau qua thật nhiều chặng đường và kỷ niệm đẹp nữa nhé! 🥳</p>
+      <button class="btn-next" onclick="restart()">Xem lại từ đầu 🔄</button>
     </div>
+
   </div>
 
   <script>
-    function checkQuiz(btn, isCorrect) {
-      const container = btn.parentElement.parentElement;
-      const result = container.querySelector('.result-msg');
-      if (isCorrect) {
-        result.innerText = "🎉 Chuẩn luôn! Nhớ dai thế nhờ!";
-        result.style.color = "#2a9d8f";
-      } else {
-        result.innerText = "❌ Sai rồi nha! Nhớ lại xem nào!";
-        result.style.color = "#e76f51";
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const progress = document.getElementById('progress');
+
+    function updateProgressBar() {
+      const percentage = ((currentSlide + 1) / slides.length) * 100;
+      progress.style.width = percentage + '%';
+    }
+
+    function nextSlide() {
+      if (currentSlide < slides.length - 1) {
+        slides[currentSlide].classList.remove('active');
+        slides[currentSlide].classList.add('prev');
+        currentSlide++;
+        slides[currentSlide].classList.add('active');
+        updateProgressBar();
       }
     }
 
-    function openGift() {
-      const gift = document.getElementById('gift');
-      gift.style.display = gift.style.display === 'block' ? 'none' : 'block';
+    function checkAnswer(isCorrect) {
+      if (isCorrect) {
+        alert("🎉 Chuẩn luôn! Nhớ dai thế nhờ!");
+        nextSlide(); // Trả lời đúng mới tự động chuyển sang Slide tiếp theo!
+      } else {
+        alert("❌ Sai bét rồi nha! Chọn lại đi nào!");
+      }
     }
+
+    function restart() {
+      slides.forEach(slide => {
+        slide.classList.remove('active', 'prev');
+      });
+      currentSlide = 0;
+      slides[0].classList.add('active');
+      updateProgressBar();
+    }
+
+    // Khởi tạo thanh tiến trình ban đầu
+    updateProgressBar();
   </script>
 </body>
 </html>
